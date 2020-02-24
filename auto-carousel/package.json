@@ -1,0 +1,30 @@
+{
+  "name": "auto-carousel",
+  "version": "1.0.0",
+  "description": "Auto carousel vanilla js web component",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@webcomponents/webcomponentsjs": "^2.4.1"
+  },
+  "scripts": {
+    "start": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kksrini89/wc-collection.git"
+  },
+  "keywords": [
+    "auto-carousel",
+    "webcomponent",
+    "vanillajs-wecomponent"
+  ],
+  "author": "Srinivasan K K",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kksrini89/wc-collection/issues"
+  },
+  "homepage": "https://github.com/kksrini89/wc-collection#readme"
+}
