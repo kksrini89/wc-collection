@@ -4,33 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auto Carousel Web Component</title>
+    <link rel="stylesheet" href="styles.css">
     <!-- Loding Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" />
 
     <!-- Loading Web component loader -->
-    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
     <!-- Auto carousel web component -->
     <script src="./index.js"></script>
   </head>
   <body>
     <auto-carousel length="5">
-      <div slot="default">
+      <!-- <div slot="default">
         Hello this is default text.
-      </div>
+      </div> -->
     </auto-carousel>
-
-    <style>
-      :root {
-        --page-bg-color: #eee;
-        --default-carousel-bg-color: #fff;
-        --selected-carousel-bg-color: #fdabe9;
-        --profile-bg-color: #fff;
-        --profile-text-color: #333;
-      }
-      body {
-        background-color: var(--page-bg-color);
-      }
-    </style>
   </body>
 </html>

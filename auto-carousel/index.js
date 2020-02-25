@@ -25,9 +25,15 @@ tmpl.innerHTML = `
   .selected-carousel {
     background-color: var(--selected-carousel-bg-color);
   }
+  .message {
+    color: red;
+    text-align: center;
+  }
 </style>
-<div class="container"><div class="carousel">
-</div></div>`;
+<div class="container">
+<div class="message"><slot name="default"></slot></div>
+<div class="carousel"></div>
+</div>`;
 
 // Custom Elements - Shadow DOM
 class AutoCarouselComponent extends HTMLElement {
@@ -46,27 +52,23 @@ class AutoCarouselComponent extends HTMLElement {
     return ['length'];
   }
 
-  //   get length() {
-  //     return this._length;
-  //   }
-
-  //   set length(val) {
-  //     if (val) {
-  //       this._length = val;
-  //     }
-  //   }
-
   // Life Cycle Events
   connectedCallback() {
-    // const templateNode = tmpl.cloneNode(true);
     this._shadowRoot.appendChild(tmpl.content.cloneNode(true));
 
     //   element references
     this.carouselContainer = this._shadowRoot.querySelector('.carousel');
     this.carouselItems = this._shadowRoot.querySelectorAll('.carousel-item');
+    this.defaultText = this.shadowRoot.querySelector('slot[name="default"]');
 
-    this.generateCarouselItems();
-    this.selectCarouselByDefault();
+    if (!this._length) {
+      if (this.defaultText) {
+        this.defaultText.textContent = `There is no container elements!!!`;
+      }
+    } else {
+      this.generateCarouselItems();
+      this.selectCarouselByDefault();
+    }
   }
 
   attributeChangedCallback(prop, oldVal, newVal) {
@@ -76,8 +78,6 @@ class AutoCarouselComponent extends HTMLElement {
   generateCarouselItems() {
     //   1. Find profile items count
     if (this._length) {
-      //   const profiles = Array.from(profileItem);
-      //   let length = profiles.length;
       while (this._length > 0) {
         //   2. Create as many carousel item with createCarouselItem method
         const carouselItem = this.createCarouselItem();
