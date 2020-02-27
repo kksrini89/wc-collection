@@ -6,3 +6,24 @@
 :root {
   --bg-color: #eee;
 }
+
+#grey {
+  height: 100vh;
+  background-color: #eee;
+}
+
+#red {
+  height: 100vh;
+  background-color:red;
+}
+
+#blue {
+  height: 100vh;
+  background-color:blue;
+}
+
+vj-top-bar .logo-title {
+  font-weight: 600;
+  font-size: 24px;
+  font-style: italic;
+}

@@ -17,9 +17,18 @@ template.innerHTML = `
         margin-left: 5%;
         width: 60%;
     }
+
+    .logo a {
+      text-decoration: none;
+      line-height: 10px;
+    }
     
-    .logo > #header-img {
-        display: none;
+    .logo #header-img {
+        height: auto;
+        width: 100%;
+        max-width: 40px;
+        vertical-align: middle;
+        margin: auto;
     }
     
     #header > #nav-bar {
@@ -41,23 +50,24 @@ template.innerHTML = `
     }
     
     #header > #nav-bar > .nav-links-container .nav-link {
-        color: #333;
         font-weight: 500;
         text-decoration: none;
         white-space: nowrap;
     }
+
+    .link-style {
+      color: #fff;
+    }
 </style>
 <header id="header">
     <div class="logo">
-        <img id="header-img" alt="logo" src="https://via.placeholder.com/50/CCCCCC/333333/?text=logo"/>
-        <span class="fab fa-artstation fa-2x"> Original Trumbones</span>
+        <a href="javascript: void(0);" class="link-style">
+          <img id="header-img" alt="logo" src="https://via.placeholder.com/50/CCCCCC/333333/?text=logo"/>
+          <slot name="logo_title"></slot>
+        </a>
     </div>
     <nav id="nav-bar">
-        <ul class="nav-links-container">
-            <li><a href="#features" class="nav-link">Features</a></li>
-            <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
-            <li><a href="#pricing" class="nav-link">Pricing</a></li>
-        </ul>
+        <ul class="nav-links-container"></ul>
     </nav>
 </header>
 `;
@@ -69,31 +79,66 @@ class TopbarComponent extends HTMLElement {
 
     this._links = [];
     this._logo = null;
+    this._defaultLogo = 'https://via.placeholder.com/50/CCCCCC/333333/?text=logo';
     this._logo_regex = /(jpg|jpeg|png|svg)$/gi;
   }
 
   static get observedAttributes() {
-    return ['logo', 'links'];
+    return ['logo', 'links', 'config'];
   }
 
   // Life cycle events
   connectedCallback() {
     this._shadowRoot.appendChild(template.content.cloneNode(true));
+    this.$header = this._shadowRoot.querySelector('#header');
     this.$logo = this._shadowRoot.querySelector('#header-img');
     this.$linksContainer = this._shadowRoot.querySelector('.nav-links-container');
 
+    // hit 2, from web component
     if (this._logo) this.setLogo();
 
-    if (this._links) this.setLinks();
+    // if (this._links && this._links.length) this.setLinks();
+
+    // if (this._config) this.setHeaderConfig();
+
   }
 
   disconnectedCallback() {}
 
-  attributeChangedCallback(name, oldVal, newVal) {}
+  attributeChangedCallback(name, oldVal, newVal) {
+    // hit 1, from html
+    if (name === 'logo') {
+      this._logo = newVal || this._defaultLogo;
+      this.setLogo();
+    }
+
+    // hit 3, from main javascript file
+    if (name === 'links') {
+      this._links = JSON.parse(newVal);
+      this.setLinks();
+    }
+
+    // hit 4, from main javascript file
+    if (name === 'config') {
+      this['_config'] = JSON.parse(newVal);
+      this.setHeaderConfig();
+    }
+  }
+
+  setHeaderConfig() {
+    try {
+      if (this.$header && this._config) {
+        const { 'bg-color': bgColor } = this._config;
+        bgColor && (this.$header.style.backgroundColor = bgColor);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   setLogo() {
     try {
-      if (this._logo) {
+      if (this._logo && this.$logo) {
         if (this._logo_regex.test(this._logo.toString())) {
           this.$logo.src = this._logo;
         }
@@ -105,14 +150,32 @@ class TopbarComponent extends HTMLElement {
 
   setLinks() {
     try {
-      if (this._links && this._links.length) {
+      if (this._links && this._links.length && this.$linksContainer) {
         const linksInput = [...this._links];
 
         // Clearing the container
         this.$linksContainer.innerHTML = '';
 
+        // To create the menu link
+        const createLinks = (option = null) => {
+          try {
+            if (option) {
+              const li = document.createElement('li');
+              const a = document.createElement('a');
+              a.classList.add('nav-link');
+              a.classList.add('link-style');
+              a.href = option.address;
+              a.text = option.anchorText;
+              li.appendChild(a);
+              return li;
+            }
+          } catch (error) {
+            console.error(error.message);
+          }
+        };
+
         for (const optn of linksInput) {
-          const li = this.createLinks(optn);
+          const li = createLinks(optn);
           this.$linksContainer.appendChild(li);
         }
       }
@@ -120,22 +183,6 @@ class TopbarComponent extends HTMLElement {
       console.error(error);
     }
   }
-
-  createLinks(option = null) {
-    try {
-      if (option) {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.classList.add('nav-link');
-        a.href = option.address;
-        a.text = option.anchorText;
-        li.appendChild(a);
-        return li;
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
 }
 
-customElements.define('top-bar', TopbarComponent);
+customElements.define('vj-top-bar', TopbarComponent);
