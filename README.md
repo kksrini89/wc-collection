@@ -8,3 +8,4 @@ I maintain this repository for keeping all of my web components.
 2. [vj-top-bar](https://github.com/kksrini89/vj-top-bar)
 3. [vj-pricing-model](https://github.com/kksrini89/vj-pricing-model)
 4. [vj-toaster](https://github.com/kksrini89/vj-toaster)
+5. [vj-auth-form](https://github.com/kksrini89/vj-auth-form)
